@@ -128,15 +128,15 @@ public class Counter {
         toFile("letters_", textName, elements, 1);
     }
 
-    public void crossingBigrammsCounter() {
-        List<Element> elements = hashMapToArrayOfElements(counter(1, 2));
+    public void crossingNgrammCounter(int n){
+        List<Element> elements = hashMapToArrayOfElements(counter(1, n));
         countingProbability(elements);
-        toFile("crossingBigramms_", textName, elements, 2);
+        toFile("crossingNgramms_", textName, elements, n);
+    }
+    public void noncrossingNgrammCounter(int n){
+        List<Element> elements = hashMapToArrayOfElements(counter(n, n));
+        countingProbability(elements);
+        toFile("noncrossingNgramms_", textName, elements, n);
     }
 
-    public void noncrossingBigrammsCounter() {
-        List<Element> elements = hashMapToArrayOfElements(counter(2, 2));
-        countingProbability(elements);
-        toFile("noncrossingBigramms_", textName, elements, 2);
-    }
 }
