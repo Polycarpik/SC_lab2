@@ -26,7 +26,7 @@ public class MostRepeatableBigrammsCounter {
     private void getAllNoncrossingBigrammsToFile(){
         try {
             Counter counter = new Counter(textName);
-            counter.noncrossingBigrammsCounter();
+            counter.noncrossingNgrammCounter(2);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
