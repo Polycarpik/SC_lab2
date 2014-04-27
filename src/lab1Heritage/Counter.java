@@ -139,4 +139,33 @@ public class Counter {
         toFile("noncrossingNgramms_", textName, elements, n);
     }
 
+    public List<String> getExhistingNgramms (int n) {
+        List<Element> elements = hashMapToArrayOfElements(counter(1,n));
+        List<String> list = new ArrayList<String>(elements.size());
+        for( int i = 0; i< elements.size() - 1; i++){
+            list.add(elements.get(i).key);
+        }
+        return list;
+    }
+
+    public void getNonexhistingNgrammCounter (int n) { //not sure it works properly
+        List<String> letters = getExhistingNgramms(1);
+        List<String> ngramms = getExhistingNgramms(n);
+        List<String> res = new ArrayList<String>();
+        for (int i = 0; i < n; i++){
+            for (int j = 0; j < letters.size(); j++){
+                res.add(letters.get(i) + letters.get(j));
+            }
+        }
+        for (int i = 0; i< ngramms.size(); i++){
+            System.out.println(ngramms.get(i));
+//            if(res.contains(ngramms.get(i))){
+//                res.remove(ngramms.get(i));
+//            }
+        }
+        for(int i = 0; i< res.size(); i++){
+            System.out.println(res.get(i) + "   " + ngramms.get(i));
+        }
+    }
+
 }
