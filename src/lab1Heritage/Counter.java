@@ -53,16 +53,6 @@ public class Counter {
         return holder;
     }
 
-//    public Object[] getArrayFromHashMap(HashMap<String, Integer> holder) {
-//        Set<Map.Entry<String, Integer>> representationsHashSet = new HashSet<Map.Entry<String, Integer>>();
-//        representationsHashSet = holder.entrySet();
-//        Object[] a = representationsHashSet.toArray();
-//        for (int i = 0; i < a.length; i++) {
-//            System.out.println(a[i]);
-//        }
-//        return a;
-//    }
-
     private List<Element> hashMapToArrayOfElements(HashMap<String, Integer> holder) {
         int total = 0;
         List<Element> elements = new ArrayList<Element>();
@@ -72,30 +62,24 @@ public class Counter {
             Element e = new Element(a, holder.get(a));
             elements.add(e);
         }
-        elements.add(new Element("total",total + 1));
+        elements.add(new Element("total", total + 1));
         return elements;
     }
 
     private void countingProbability(List<Element> elements) {
-        int total = elements.get(elements.size()-1).value;
+        int total = elements.get(elements.size() - 1).value;
         for (int i = 0; i < elements.size() - 1; i++) {
 
             Element a = new Element(elements.get(i).key, elements.get(i).value);
             a.probability = (double) a.value / total;
             elements.set(i, a);
         }
-//        System.out.println("Total is " + total);
-        elements.remove(elements.size()-1);
+        elements.remove(elements.size() - 1);
         Collections.sort(elements, new Comparator<Element>() {
             public int compare(Element o1, Element o2) {
                 return -(o1.probability.compareTo(o2.probability));
             }
         });
-//        for (int i = 0; i < elements.size(); i++) {
-//            System.out.println(elements.get(i).key + " = " + elements.get(i).value);
-//            System.out.println(elements.get(i).key + " = " + elements.get(i).probability);
-//
-//        }
     }
 
     private double entropyCounter(List<Element> elements, int gramm) {
@@ -128,44 +112,57 @@ public class Counter {
         toFile("letters_", textName, elements, 1);
     }
 
-    public void crossingNgrammCounter(int n){
+    public void crossingNgrammCounter(int n) {
         List<Element> elements = hashMapToArrayOfElements(counter(1, n));
         countingProbability(elements);
         toFile("crossingNgramms_", textName, elements, n);
     }
-    public void noncrossingNgrammCounter(int n){
+
+    public void noncrossingNgrammCounter(int n) {
         List<Element> elements = hashMapToArrayOfElements(counter(n, n));
         countingProbability(elements);
         toFile("noncrossingNgramms_", textName, elements, n);
     }
 
-    public List<String> getExhistingNgramms (int n) {
-        List<Element> elements = hashMapToArrayOfElements(counter(1,n));
+    public List<String> getExhistingNgramms(int n) {
+        List<Element> elements = hashMapToArrayOfElements(counter(1, n));
         List<String> list = new ArrayList<String>(elements.size());
-        for( int i = 0; i< elements.size() - 1; i++){
+        for (int i = 0; i < elements.size() - 1; i++) {
             list.add(elements.get(i).key);
         }
         return list;
     }
 
-    public void getNonexhistingNgrammCounter (int n) { //not sure it works properly
-        List<String> letters = getExhistingNgramms(1);
-        List<String> ngramms = getExhistingNgramms(n);
-        List<String> res = new ArrayList<String>();
-        for (int i = 0; i < n; i++){
-            for (int j = 0; j < letters.size(); j++){
-                res.add(letters.get(i) + letters.get(j));
+    public List<String> getAllNgrammsFromAlphabet(String fileWithAlphabetName, int n) throws FileNotFoundException {
+        List<String> alphabet = new ArrayList<String>();
+        Scanner scanner = new Scanner(new File(fileWithAlphabetName));
+        while (scanner.hasNext()) {
+            alphabet.add(scanner.next());
+        }
+        scanner.close();
+        List<String> allNgramms = alphabet;
+        while (n > 1) {
+            List<String> temp = new ArrayList<String>();
+            for (int i = 0; i < allNgramms.size(); i++) {
+                for (int j = 0; j < alphabet.size(); j++) {
+                    temp.add(allNgramms.get(i) + alphabet.get(j));
+                }
+            }
+            allNgramms = temp;
+            n--;
+        }
+        return allNgramms;
+    }
+
+    public List<String> getNonexhistingNgrammCounter(String alphabetName, int n) throws FileNotFoundException {
+        List<String> exhistingNgramms = getExhistingNgramms(n);
+        List<String> nonExgistingNgramms = getAllNgrammsFromAlphabet(alphabetName, n);
+        for (int i = 0; i < exhistingNgramms.size(); i++) {
+            if (nonExgistingNgramms.contains(exhistingNgramms.get(i))) {
+                nonExgistingNgramms.remove(exhistingNgramms.get(i));
             }
         }
-        for (int i = 0; i< ngramms.size(); i++){
-            System.out.println(ngramms.get(i));
-//            if(res.contains(ngramms.get(i))){
-//                res.remove(ngramms.get(i));
-//            }
-        }
-        for(int i = 0; i< res.size(); i++){
-            System.out.println(res.get(i) + "   " + ngramms.get(i));
-        }
+        return nonExgistingNgramms;
     }
 
 }
