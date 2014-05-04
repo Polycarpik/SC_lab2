@@ -19,10 +19,14 @@ public class Decryption {
 
         List<String> decryptedBigramms = new LinkedList<String>();  //here will be all decrypted bigramms
         ObligatoryMath om = new ObligatoryMath();
-        for (int i = 0; i < textInBigramms.size(); i++)
-            decryptedBigramms.add(bigrammHolder.get(((om
-                    .getInverseElement(key.a, module)) * ((bigrammHolder
-                    .indexOf(textInBigramms.get(i))) - key.b)) % module));
+        for (int i = 0; i < textInBigramms.size(); i++) {
+            decryptedBigramms.add(
+                    bigrammHolder.get(((
+                            om.getInverseElement(key.a, module)) *
+                            ((bigrammHolder.indexOf(textInBigramms.get(i)))
+                                    - key.b))
+                            % module));
+        }
 
         ch.toFile("decrypted_", textfileName, decryptedBigramms);
 
