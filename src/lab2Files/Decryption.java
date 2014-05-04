@@ -23,7 +23,11 @@ public class Decryption {
         int y; int x;
         for (int i = 0; i < textInBigramms.size(); i++) {
             y = bigrammHolder.indexOf(textInBigramms.get(i));
+            System.out.println("y: " + y);
             x = inverseA * (y - key.b) % module;
+            if(x < 0) {
+                x = x + module;
+            }
             System.out.println(x + " num " + bigrammHolder.size());
             decryptedBigramms.add(bigrammHolder.get(x));
         }
