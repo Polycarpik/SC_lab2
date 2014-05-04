@@ -15,8 +15,8 @@ public class Encryption {
 
     public void encrypt(String textfileName) throws FileNotFoundException {
         CryptoHelper ch = new CryptoHelper();
-        ArrayList<String> bigrammHolder = ch.getAllSortedBigramms("alphabet"); //get all bigramms with corresponding to them numbers
-        int module = bigrammHolder.size();
+        ArrayList<String> bigrammHolder = ch.getAllSortedBigramms("alphabet"); //get all bigramms
+        int module = bigrammHolder.size();                                     //corresponding to them numbers
         Key key = ch.keyGenerator(module);     //generating key
 
         System.out.println("a = " + key.a + ", b = " + key.b);
@@ -25,7 +25,8 @@ public class Encryption {
         List<String> encryptedBigramms = new LinkedList<String>();  //here will be all encrypted bigramms
         for (int i = 0; i < textInBigramms.size(); i++) {      //encryption here
             //Y_i = (a*X_i + b) mod m^2
-            encryptedBigramms.add(bigrammHolder.get(((key.a * bigrammHolder.indexOf(textInBigramms.get(i))) + key.b)%module));
+            encryptedBigramms.add(bigrammHolder.get(((key.a * bigrammHolder
+                    .indexOf(textInBigramms.get(i))) + key.b)%module));
         }
 
         ch.toFile("encrypted_", textfileName, encryptedBigramms); //writing to file
