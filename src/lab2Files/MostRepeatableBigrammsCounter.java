@@ -18,8 +18,8 @@ public class MostRepeatableBigrammsCounter {
     private String textName;
     private String text;
 
-    public MostRepeatableBigrammsCounter(String text) {
-        this.textName = text;
+    public MostRepeatableBigrammsCounter(String textName) {
+        this.textName = textName;
         getAllNoncrossingBigrammsToFile();
     }
 
@@ -33,11 +33,11 @@ public class MostRepeatableBigrammsCounter {
     }
 
 
-    public List<String> getFiveMostRepeatableToArray() {
-        List<String>  bigramms = new ArrayList<String>(5);
+    public ArrayList<String> getFiveMostRepeatableToArrayList() {
+        ArrayList<String>  bigramms = new ArrayList<String>(5);
         Scanner in = null;
         try {
-            in = new Scanner(new File("noncrossingBigramms_" + textName));
+            in = new Scanner(new File("noncrossingNgramms_" + textName));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -45,13 +45,14 @@ public class MostRepeatableBigrammsCounter {
             bigramms.add(in.nextLine().substring(0, 2));
         }
         in.close();
+        cleanAllTails();
         return bigramms;
     }
 
     public void getFiveMostRepeatable() {
-        List<String> elements = getFiveMostRepeatableToArray();
+        List<String> elements = getFiveMostRepeatableToArrayList();
         try {
-            PrintWriter out = new PrintWriter(new File("mostRepeatedBirgamms").getAbsoluteFile());
+            PrintWriter out = new PrintWriter(new File("mostRepeatedNgramms").getAbsoluteFile());
             try {
                 for (int i = 0; i < elements.size(); i++) {
                     out.println(elements.get(i));
@@ -66,7 +67,7 @@ public class MostRepeatableBigrammsCounter {
     }
 
     private void cleanAllTails (){
-        File f = new File("noncrossingBigramms_" + textName);
+        File f = new File("noncrossingNgramms_" + textName);
         f.delete();
     }
 }

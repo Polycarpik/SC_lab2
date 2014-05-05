@@ -9,11 +9,13 @@ public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
 //        Encryption encryption = new Encryption();
-//        encryption.encrypt("text1");
+//        encryption.encrypt("test");
+
+//        MostRepeatableBigrammsCounter mrbc = new MostRepeatableBigrammsCounter("test");
+//        mrbc.getFiveMostRepeatable();
 
         Decryption d = new Decryption();
-        Key key = new Key(468,130);
-        d.decrypt("encrypted_text1",key);
+        d.decryptWithoutKey("encrypted_test");
 
     }
 
