@@ -46,6 +46,8 @@ public class ObligatoryMath {
     }
 
     public int[] solvingLinearComparisons(int a, int b, int n) {
+        if (a < 0) a = a + n;
+        if (b < 0) b = b + n;
         int d = gcd(a, n);
         int[] result = new int[d];
         if (d == 1) {

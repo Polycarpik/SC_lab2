@@ -33,15 +33,15 @@ public class MostRepeatableBigrammsCounter {
     }
 
 
-    public ArrayList<String> getFiveMostRepeatableToArrayList() {
-        ArrayList<String>  bigramms = new ArrayList<String>(5);
+    public ArrayList<String> getMostRepeatableToArrayList(int num) {
+        ArrayList<String>  bigramms = new ArrayList<String>(num);
         Scanner in = null;
         try {
             in = new Scanner(new File("noncrossingNgramms_" + textName));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        for (int i = 0; i < 5 && in.hasNext(); i++)        {
+        for (int i = 0; i < num && in.hasNext(); i++)        {
             bigramms.add(in.nextLine().substring(0, 2));
         }
         in.close();
@@ -49,8 +49,8 @@ public class MostRepeatableBigrammsCounter {
         return bigramms;
     }
 
-    public void getFiveMostRepeatable() {
-        List<String> elements = getFiveMostRepeatableToArrayList();
+    public void getMostRepeatable(int num) {
+        List<String> elements = getMostRepeatableToArrayList(num);
         try {
             PrintWriter out = new PrintWriter(new File("mostRepeatedNgramms").getAbsoluteFile());
             try {

@@ -65,7 +65,10 @@ public class CryptoHelper {
         try {
             PrintWriter out = new PrintWriter(new File(addon + textfileName).getAbsoluteFile());
             try {
-                out.print(b);
+                  out.println(b);
+//                for(int i = 0; i < list.size(); i++){            //to print in lines
+//                    out.println(list.get(i));
+//                }
             } finally {
                 out.close();
             }

@@ -10,11 +10,17 @@ import java.util.List;
  */
 public class Decryption {
 
-    public void decryptWithKey(String textfileName, Key key) throws FileNotFoundException {
-        CryptoHelper ch = new CryptoHelper();
-        ArrayList<String> bigrammHolder = ch.getAllSortedBigramms("alphabet"); //get all bigramms with
-        int module = bigrammHolder.size();                                     //corresponding to them numbers
+    private CriteriaOfMeaningfulText comt = new CriteriaOfMeaningfulText();
+    private CryptoHelper ch = new CryptoHelper();
+    private ArrayList<String> bigrammHolder;
+    private int module;
 
+    public Decryption() throws FileNotFoundException {
+        bigrammHolder = ch.getAllSortedBigramms("alphabet");
+        module = bigrammHolder.size();
+    }
+
+    public void decryptWithKey(String addon, String textfileName, Key key) throws FileNotFoundException {
         List<String> textInBigramms = ch.parseTextToListOfBigramms(textfileName); //get list of bigramms from text
 
         List<String> decryptedBigramms = new LinkedList<String>();  //here will be all decrypted bigramms
@@ -24,48 +30,68 @@ public class Decryption {
         int x;
         for (int i = 0; i < textInBigramms.size(); i++) {
             y = bigrammHolder.indexOf(textInBigramms.get(i));
-            x = inverseA * (y - key.b) % module;
+            x = (inverseA * (y - key.b)) % module;
             if (x < 0) {
                 x = x + module;
             }
             decryptedBigramms.add(bigrammHolder.get(x));
         }
 
-//
-//        String b = "";                                             //delete when found bug
-//        for(int i = 0; i < decryptedBigramms.size(); i++){
-//            b += decryptedBigramms.get(i);
-//        }
-//        System.out.println(b);
+
+        if(!comt.nonexhistingNgrammCheck(decryptedBigramms)){
+            return;
+        }
+
+        String b = "";                                             //delete when found bug
+        for (int i = 0; i < decryptedBigramms.size(); i++) {
+            b += decryptedBigramms.get(i);
+        }
+        System.out.println(b);
 
 
-
-//        ch.toFile("decrypted_" + addon, textfileName, decryptedBigramms);
+//        ch.toFile(addon + "_decrypted_", textfileName, decryptedBigramms);
     }
 
     public void decryptWithoutKey(String textfileName) throws FileNotFoundException {    //makes some shit
-        CryptoHelper ch = new CryptoHelper();
         ObligatoryMath om = new ObligatoryMath();
-        ArrayList<String> bigrammHolder = ch.getAllSortedBigramms("alphabet");
-        int module = bigrammHolder.size();
-        List<String> mrblist = ch.parseTextToListOfBigramms("mostRepeatedNgramms");
-//        MostRepeatableBigrammsCounter mrb = new MostRepeatableBigrammsCounter(textfileName);
-        List<String> mrbInText = ch.parseTextToListOfBigramms("mostRepeatedNgrammsEn"); //mrb.getFiveMostRepeatableToArrayList();
+        List<String> mrblist = ch.parseTextToListOfBigramms("mostRepeatedNgramms");   //list with most repeated bigramms
+        MostRepeatableBigrammsCounter mrb = new MostRepeatableBigrammsCounter(textfileName);
+        List<String> mrbInText = mrb.getMostRepeatableToArrayList(5);   //list of most repeated bigramms in encrypted text
 
-        int a = ((bigrammHolder.indexOf(mrbInText.get(1)) - bigrammHolder.indexOf(mrbInText.get(2)))*(om.getInverseElement(bigrammHolder.indexOf(mrblist.get(1))
-        - bigrammHolder.indexOf(mrblist.get(2)),module))%module);
-        int b = (bigrammHolder.indexOf(mrbInText.get(2)) - a*bigrammHolder.indexOf(mrblist.get(2)))%module;
-
-
-//            a = ((y1 - y2) * (om.getInverseElement(x1 - x2, module))) % module;
-//            b = (y1 - a * x1) % module;
-//            if(a < 0) a = module + a;
-//            if(b < 0) b = module + b;
-            System.out.println("a " + a + "     b " + b);
-            decryptWithKey(textfileName, new Key(a, b));
-
-
+        int x1;
+        int x2;
+        int y1;
+        int y2;
+        int[] a;
+        int b;
+        for (int i = 0; i < mrblist.size(); i++)
+            for (int j = i + 1; j < mrblist.size(); j++)
+                for (int m = 0; m < mrblist.size(); m++)
+                    for (int l = 0; l < mrblist.size(); l++) {
+                        if (m == l) continue;
+                        x1 = bigrammHolder.indexOf(mrblist.get(i));
+                        x2 = bigrammHolder.indexOf(mrblist.get(j));
+                        y1 = bigrammHolder.indexOf(mrbInText.get(m));
+                        y2 = bigrammHolder.indexOf(mrbInText.get(l));
+//        System.out.println("x1 " + x1 + "    x2 " + x2);
+//        System.out.println("y1 " + y1 + "    y2 " + y2);
+//        System.out.println("inverseElement  "+om.getInverseElement(x1 - x2, module));
+//        System.out.println("x1-x2  " + (x1- x2));
+//        System.out.println("y1-y2  " + (y1-y2));
+                        a = om.solvingLinearComparisons(x1 - x2, y1 - y2, module);
+                        if (a == null) continue;
+                        for (int k = 0; k < a.length; k++) {
+                            b = (y1 - a[k] * x1) % module;
+                            if (a[k] < 0) a[k] = module + a[k];
+                            if (b < 0) b = module + b;
+                            System.out.println("a " + a[k] + "     b " + b);
+                            decryptWithKey(mrblist.get(i), textfileName, new Key(a[k], b));
+                        }
+                    }
     }
 
 
 }
+
+
+

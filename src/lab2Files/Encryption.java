@@ -13,7 +13,7 @@ public class Encryption {
     public Encryption() {
     }
 
-    public void encrypt(String textfileName) throws FileNotFoundException {
+    public Key encrypt(String textfileName) throws FileNotFoundException {
         CryptoHelper ch = new CryptoHelper();
         ArrayList<String> bigrammHolder = ch.getAllSortedBigramms("alphabet"); //get all bigramms
         int module = bigrammHolder.size();                                     //corresponding to them numbers
@@ -30,5 +30,6 @@ public class Encryption {
         }
 
         ch.toFile("encrypted_", textfileName, encryptedBigramms); //writing to file
+        return key;
     }
 }
