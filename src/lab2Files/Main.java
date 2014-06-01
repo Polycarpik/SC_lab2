@@ -1,7 +1,5 @@
 package lab2Files;
 
-import lab1Heritage.Counter;
-
 import java.io.FileNotFoundException;
 
 /**
@@ -10,7 +8,7 @@ import java.io.FileNotFoundException;
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
-        String name = "newTest.txt";
+        String name = "lastCheck.txt";
 //        Encryption encryption = new Encryption();
 //       Key key = encryption.encrypt(name);
 //        MostRepeatableBigrammsCounter mrbc = new MostRepeatableBigrammsCounter(name);
@@ -21,7 +19,7 @@ public class Main {
 //        Key b = new Key(13, 151);  // my variant
 
 
-        Counter counter = new Counter("newby");
+//        Counter counter = new Counter("newby");
 //        counter.getEntropy();
 
 

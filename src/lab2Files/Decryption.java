@@ -66,37 +66,27 @@ public class Decryption {
         int y2;
         int[] a;
         int b;
-        List<Key> keys = new ArrayList<Key>();
+        List<Integer> keys = new ArrayList<Integer>();
         for (int i = 0; i < mrblist.size(); i++)
             for (int j = i + 1; j < mrblist.size(); j++)
                 for (int m = 0; m < mrblist.size(); m++)
                     for (int l = 0; l < mrblist.size(); l++) {
-                        if (m == l) continue;
-                        System.out.println("m = " + m);
                         x1 = bigrammHolder.indexOf(mrblist.get(i));
                         x2 = bigrammHolder.indexOf(mrblist.get(j));
                         y1 = bigrammHolder.indexOf(mrbInText.get(m));
                         y2 = bigrammHolder.indexOf(mrbInText.get(l));
-//        System.out.println("x1 " + x1 + "    x2 " + x2);
-//        System.out.println("y1 " + y1 + "    y2 " + y2);
-//        System.out.println("inverseElement  "+om.getInverseElement(x1 - x2, module));
-//        System.out.println("x1-x2  " + (x1- x2));
-//        System.out.println("y1-y2  " + (y1-y2));
                         a = om.solvingLinearComparisons(x1 - x2, y1 - y2, module);
                         if (a == null) continue;
                         for (int k = 0; k < a.length; k++) {
                             b = (y1 - a[k] * x1) % module;
                             if (a[k] < 0) a[k] = module + a[k];
                             if (b < 0) b = module + b;
-//                            System.out.println("a " + a[k] + "     b " + b);
-                            if (keys.contains(new Key(a[k], b))) {
+                            if (keys.contains(a[k])) {
                                 continue;
-                            } else keys.add(new Key(a[k], b));
+                            } else keys.add(a[k]);
                             decryptWithKey(mrblist.get(i), textfileName, new Key(a[k], b));
-//                            System.out.println("loop");
                         }
                     }
-        System.out.println(keys.size());
     }
 
 
