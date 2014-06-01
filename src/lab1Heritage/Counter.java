@@ -12,7 +12,8 @@ import java.util.*;
 public class Counter {
 
     private String textName;
-    private String text;
+    private String text = "";
+    private double entropy;
 
     private class Element {
 
@@ -35,13 +36,15 @@ public class Counter {
             this.text += in.nextLine();
         }
         in.close();
+        entropy = helper();
     }
 
-    private HashMap<String, Integer> counter(int step, int gramm) {
+    private HashMap<String, Integer> ngrammCounter(int step, int gramm) {
         HashMap<String, Integer> holder = new HashMap<String, Integer>();
         int length = this.text.length();
+
         for (int i = 0; i + 1 < length; i += step) {
-            String bigramm = this.text.substring(i, i + gramm);
+            String bigramm = text.substring(i, i + gramm);
             if (!holder.containsKey(bigramm)) {
                 holder.put(bigramm, 1);
             } else {
@@ -90,6 +93,17 @@ public class Counter {
         return (-entropy / gramm);
     }
 
+
+    private double helper(){
+        List<Element> elements = hashMapToArrayOfElements(ngrammCounter(1, 2));
+        countingProbability(elements);
+        return  entropyCounter(elements,2);
+    }
+
+    public double getEntropy() {
+        return entropy;
+    }
+
     private void toFile(String addon, String fileName, List<Element> elements, int gramm) {
         try {
             PrintWriter out = new PrintWriter(new File(addon + fileName).getAbsoluteFile());
@@ -107,25 +121,25 @@ public class Counter {
     }
 
     public void letterCounter() {
-        List<Element> elements = hashMapToArrayOfElements(counter(1, 1));
+        List<Element> elements = hashMapToArrayOfElements(ngrammCounter(1, 1));
         countingProbability(elements);
         toFile("letters_", textName, elements, 1);
     }
 
     public void crossingNgrammCounter(int n) {
-        List<Element> elements = hashMapToArrayOfElements(counter(1, n));
+        List<Element> elements = hashMapToArrayOfElements(ngrammCounter(1, n));
         countingProbability(elements);
         toFile("crossingNgramms_", textName, elements, n);
     }
 
     public void noncrossingNgrammCounter(int n) {
-        List<Element> elements = hashMapToArrayOfElements(counter(n, n));
+        List<Element> elements = hashMapToArrayOfElements(ngrammCounter(n, n));
         countingProbability(elements);
         toFile("noncrossingNgramms_", textName, elements, n);
     }
 
     public List<String> getExhistingNgramms(int n) {
-        List<Element> elements = hashMapToArrayOfElements(counter(1, n));
+        List<Element> elements = hashMapToArrayOfElements(ngrammCounter(1, n));
         List<String> list = new ArrayList<String>(elements.size());
         for (int i = 0; i < elements.size() - 1; i++) {
             list.add(elements.get(i).key);

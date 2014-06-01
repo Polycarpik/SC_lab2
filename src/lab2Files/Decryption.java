@@ -38,9 +38,11 @@ public class Decryption {
         }
 
 
-        if(!comt.nonexhistingNgrammCheck(decryptedBigramms)){
+        if (!comt.makeAllCheks(decryptedBigramms)) {
             return;
         }
+
+        System.out.println("a = " + key.a + "     b = " + key.b);
 
         String b = "";                                             //delete when found bug
         for (int i = 0; i < decryptedBigramms.size(); i++) {
@@ -64,11 +66,13 @@ public class Decryption {
         int y2;
         int[] a;
         int b;
+        List<Key> keys = new ArrayList<Key>();
         for (int i = 0; i < mrblist.size(); i++)
             for (int j = i + 1; j < mrblist.size(); j++)
                 for (int m = 0; m < mrblist.size(); m++)
                     for (int l = 0; l < mrblist.size(); l++) {
                         if (m == l) continue;
+                        System.out.println("m = " + m);
                         x1 = bigrammHolder.indexOf(mrblist.get(i));
                         x2 = bigrammHolder.indexOf(mrblist.get(j));
                         y1 = bigrammHolder.indexOf(mrbInText.get(m));
@@ -84,10 +88,15 @@ public class Decryption {
                             b = (y1 - a[k] * x1) % module;
                             if (a[k] < 0) a[k] = module + a[k];
                             if (b < 0) b = module + b;
-                            System.out.println("a " + a[k] + "     b " + b);
+//                            System.out.println("a " + a[k] + "     b " + b);
+                            if (keys.contains(new Key(a[k], b))) {
+                                continue;
+                            } else keys.add(new Key(a[k], b));
                             decryptWithKey(mrblist.get(i), textfileName, new Key(a[k], b));
+//                            System.out.println("loop");
                         }
                     }
+        System.out.println(keys.size());
     }
 
 
