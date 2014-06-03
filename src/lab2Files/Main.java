@@ -8,7 +8,7 @@ import java.io.FileNotFoundException;
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
-        String name = "lastCheck.txt";
+        String name = "maVar";
 //        Encryption encryption = new Encryption();
 //       Key key = encryption.encrypt(name);
 //        MostRepeatableBigrammsCounter mrbc = new MostRepeatableBigrammsCounter(name);
